@@ -1,0 +1,24 @@
+nginx:
+  build: nginx
+  ports:
+    - "80:80"
+  volumes:
+    - ./src:/var/www/html # website root
+  volumes_from:
+    - phpfpm # For php5-fpm.sock
+mysql:
+  image: mysql:5.7
+  volumes:
+    - /var/run/mysqld # For mysqld.sock
+    - ./db-init:/docker-entrypoint-initdb.d # Automatically run mysql import
+  environment:
+    MYSQL_ROOT_PASSWORD: super_secret_password
+phpfpm:
+  build: phpfpm
+  volumes:
+    - ./src:/var/www/html # website root
+    - /var/run/php5-fpm # For php5-fpm.sock
+  volumes_from:
+    - mysql # For mysqld.sock
+  environment:
+    MYSQL_ROOT_PASSWORD: super_secret_password

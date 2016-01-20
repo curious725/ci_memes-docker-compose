@@ -1,0 +1,25 @@
+# Trigger build on docker-enabled workers. Contact support@solanolabs.com to gain access to the docker queue.
+system:
+  docker: true
+  queue: docker
+
+# See the individual script files for the actions performed by each setup hook.
+# (http://docs.solanolabs.com/Setup/setup-hooks/)
+hooks:
+  pre_setup: ./scripts/solano-pre_setup.sh
+  worker_setup: ./scripts/solano-worker_setup.sh
+  post_worker: ./scripts/solano-post_worker.sh
+
+php:
+  php_version: "5.6"
+
+mysql:
+  adapter: 'mysql2'
+
+tests:
+  - type: phpunit
+    mode: parallel
+    command: ./vendor/bin/solano-phpunit
+    config: phpunit.xml
+    files:
+      - tests/**_test.php
